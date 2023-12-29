@@ -3,7 +3,7 @@ name: peekup development workflow
 on:
   push:
     branches:
-      - dev-branch
+      - master
 
 jobs:
   peekup-development:
