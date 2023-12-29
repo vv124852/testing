@@ -1,5 +1,3 @@
-name: peekup development workflow
-
 on:
   push:
     branches:
@@ -21,13 +19,20 @@ jobs:
       - name: Install dependencies
         run: npm i
 
-      - name: create build and store old build to old_build
+      - name: Create build and store old build to old_build
         run: |
           if npm run custom-build; then
-           mkdir temporary_build
+            # Create a temporary directory if it doesn't exist
+            mkdir -p temporary_build
+
+            # Move existing build to old_build only if old_build exists
+            if [ -d old_build ]; then
+              rm -r old_build
+              mv build old_build
+            fi
+
+            # Move temporary_build to new_build
             mv temporary_build new_build
-            rm -r old_build
-            mv build old_build
           else
             echo "Custom build failed."
             exit 1
