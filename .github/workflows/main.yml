@@ -1,3 +1,5 @@
+name : peekup development workflow
+
 on:
   push:
     branches:
@@ -5,10 +7,11 @@ on:
 
 jobs:
   peekup-development:
+    name: peekup-dev
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v2
 
       - name: Setup Node.js environment
@@ -16,15 +19,29 @@ jobs:
         with:
           node-version: 18.18.2
 
-      - name: Install dependencies
-        run: npm i
+      - name: Install Dependencies
+        run: npm ci
 
-      - name: Create build and store old build to old_build
+      - name: Custom Build
         run: |
-          npm run custom-build && \
-          mkdir -p temporary_build && \
-          if [ -d old_build ]; then \
-            rm -r old_build; \
-          fi && \
-          mv build old_build && \
+          set -e
+
+          echo "Running custom build..."
+          npm run custom-build
+
+          echo "Creating temporary_build directory..."
+          mkdir -p temporary_build
+
+          if [ -d old_build ]; then
+            echo "Removing old_build directory..."
+            rm -r old_build
+          fi
+
+          echo "Moving build to old_build..."
+          mv build old_build
+
+          echo "Moving temporary_build to new_build..."
           mv temporary_build new_build
+
+          # Additional commands to run if the custom build is successful
+          echo "Custom build succeeded! Adding more steps here..."
