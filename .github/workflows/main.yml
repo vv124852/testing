@@ -1,0 +1,33 @@
+name: peekup development workflow
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  peekup-development:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 18.18.2
+
+      - name: Install dependencies
+        run: npm i
+
+      - name: create build and store old build to old_build
+        run: |
+          if npm run custom-build; then
+            mv ./temporary_build new_build
+            rm -r old_build
+            mv build old_build
+          else
+            echo "Custom build failed."
+            exit 1
+          fi
