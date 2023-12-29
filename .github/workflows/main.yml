@@ -24,7 +24,7 @@ jobs:
       - name: create build and store old build to old_build
         run: |
           if npm run custom-build; then
-            mv ./temporary_build new_build
+            mv temporary_build new_build
             rm -r old_build
             mv build old_build
           else
