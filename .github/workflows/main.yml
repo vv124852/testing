@@ -23,6 +23,8 @@ jobs:
         run: |
           npm run custom-build && \
           mkdir -p temporary_build && \
-          rm -r old_build && \
+          if [ -d old_build ]; then \
+            rm -r old_build; \
+          fi && \
           mv build old_build && \
           mv temporary_build new_build
